@@ -1,30 +1,30 @@
-const menuButton =
-  document.getElementById("menuButton");
+const menuToggle =
+  document.getElementById("menuToggle");
 
 const navigation =
   document.getElementById("navigation");
 
-const header =
-  document.getElementById("header");
+const siteHeader =
+  document.getElementById("siteHeader");
 
 
 // -----------------------------
-// MOBILE NAVIGATION
+// MOBILE MENU
 // -----------------------------
 
-menuButton.addEventListener("click", () => {
+menuToggle.addEventListener("click", () => {
 
-  const open =
+  const isOpen =
     navigation.classList.toggle("open");
-
-  menuButton.setAttribute(
-    "aria-expanded",
-    String(open)
-  );
 
   document.body.classList.toggle(
     "menu-open",
-    open
+    isOpen
+  );
+
+  menuToggle.setAttribute(
+    "aria-expanded",
+    String(isOpen)
   );
 
 });
@@ -42,7 +42,7 @@ document
         "menu-open"
       );
 
-      menuButton.setAttribute(
+      menuToggle.setAttribute(
         "aria-expanded",
         "false"
       );
@@ -53,28 +53,18 @@ document
 
 
 // -----------------------------
-// HEADER ON SCROLL
+// HEADER SCROLL
 // -----------------------------
 
 function updateHeader() {
 
-  if (window.scrollY > 50) {
+  if (window.scrollY > 45) {
 
-    header.style.position = "fixed";
-    header.style.top = "0";
-    header.style.background =
-      "rgba(32,40,37,.96)";
-    header.style.backdropFilter =
-      "blur(12px)";
+    siteHeader.classList.add("scrolled");
 
   } else {
 
-    header.style.position = "absolute";
-    header.style.top = "34px";
-    header.style.background =
-      "transparent";
-    header.style.backdropFilter =
-      "none";
+    siteHeader.classList.remove("scrolled");
 
   }
 
@@ -89,16 +79,16 @@ updateHeader();
 
 
 // -----------------------------
-// REVEAL ANIMATIONS
+// SCROLL REVEALS
 // -----------------------------
 
 const revealElements =
   document.querySelectorAll(
-    ".intro-copy, .intro-photo, .approach-card, .service, .philosophy-copy, .founder-copy, .founder-photo, .contact-action"
+    ".intro-image, .intro-content, .about-photo, .about-content, .approach-card, .service, .philosophy-photo, .philosophy-content, .video-heading, .video-frame, .location-copy, .map-wrapper, .contact-links"
   );
 
 
-const observer =
+const revealObserver =
   new IntersectionObserver(
     entries => {
 
@@ -108,12 +98,11 @@ const observer =
           return;
         }
 
-        entry.target.style.opacity = "1";
+        entry.target.classList.add(
+          "reveal-visible"
+        );
 
-        entry.target.style.transform =
-          "translateY(0)";
-
-        observer.unobserve(
+        revealObserver.unobserve(
           entry.target
         );
 
@@ -128,22 +117,21 @@ const observer =
 
 revealElements.forEach(element => {
 
-  element.style.opacity = "0";
+  element.classList.add("reveal");
 
-  element.style.transform =
-    "translateY(25px)";
-
-  element.style.transition =
-    "opacity .7s ease, transform .7s ease";
-
-  observer.observe(element);
+  revealObserver.observe(element);
 
 });
 
 
 // -----------------------------
-// CURRENT YEAR
+// YEAR
 // -----------------------------
 
-document.getElementById("year").textContent =
-  new Date().getFullYear();
+const year =
+  document.getElementById("year");
+
+if (year) {
+  year.textContent =
+    new Date().getFullYear();
+}
