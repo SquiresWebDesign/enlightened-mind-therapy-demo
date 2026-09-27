@@ -1,137 +1,118 @@
-const menuToggle =
-  document.getElementById("menuToggle");
+/* --------------------------------
+   MOBILE NAVIGATION
+-------------------------------- */
 
-const navigation =
-  document.getElementById("navigation");
+const menuToggle = document.getElementById("menuToggle");
+const navigation = document.getElementById("navigation");
 
-const siteHeader =
-  document.getElementById("siteHeader");
+if (menuToggle && navigation) {
 
-
-// -----------------------------
-// MOBILE MENU
-// -----------------------------
-
-menuToggle.addEventListener("click", () => {
-
-  const isOpen =
+  menuToggle.addEventListener("click", () => {
     navigation.classList.toggle("open");
+  });
 
-  document.body.classList.toggle(
-    "menu-open",
-    isOpen
-  );
-
-  menuToggle.setAttribute(
-    "aria-expanded",
-    String(isOpen)
-  );
-
-});
-
-
-document
-  .querySelectorAll(".navigation a")
-  .forEach(link => {
+  navigation.querySelectorAll("a").forEach(link => {
 
     link.addEventListener("click", () => {
-
       navigation.classList.remove("open");
-
-      document.body.classList.remove(
-        "menu-open"
-      );
-
-      menuToggle.setAttribute(
-        "aria-expanded",
-        "false"
-      );
-
     });
 
   });
 
-
-// -----------------------------
-// HEADER SCROLL
-// -----------------------------
-
-function updateHeader() {
-
-  if (window.scrollY > 45) {
-
-    siteHeader.classList.add("scrolled");
-
-  } else {
-
-    siteHeader.classList.remove("scrolled");
-
-  }
-
 }
 
-window.addEventListener(
-  "scroll",
-  updateHeader
+
+/* --------------------------------
+   SCROLL REVEAL
+-------------------------------- */
+
+const revealElements = document.querySelectorAll(".reveal");
+
+const revealObserver = new IntersectionObserver(
+  entries => {
+
+    entries.forEach(entry => {
+
+      if (entry.isIntersecting) {
+
+        entry.target.classList.add("visible");
+
+        revealObserver.unobserve(entry.target);
+
+      }
+
+    });
+
+  },
+  {
+    threshold: 0.12
+  }
 );
 
-updateHeader();
-
-
-// -----------------------------
-// SCROLL REVEALS
-// -----------------------------
-
-const revealElements =
-  document.querySelectorAll(
-    ".intro-image, .intro-content, .about-photo, .about-content, .approach-card, .service, .philosophy-photo, .philosophy-content, .video-heading, .video-frame, .location-copy, .map-wrapper, .contact-links"
-  );
-
-
-const revealObserver =
-  new IntersectionObserver(
-    entries => {
-
-      entries.forEach(entry => {
-
-        if (!entry.isIntersecting) {
-          return;
-        }
-
-        entry.target.classList.add(
-          "reveal-visible"
-        );
-
-        revealObserver.unobserve(
-          entry.target
-        );
-
-      });
-
-    },
-    {
-      threshold: 0.12
-    }
-  );
-
-
 revealElements.forEach(element => {
-
-  element.classList.add("reveal");
-
   revealObserver.observe(element);
+});
+
+
+/* --------------------------------
+   SMOOTH ANCHOR SCROLL
+-------------------------------- */
+
+document.querySelectorAll('a[href^="#"]').forEach(link => {
+
+  link.addEventListener("click", event => {
+
+    const targetId = link.getAttribute("href");
+
+    if (!targetId || targetId === "#") {
+      return;
+    }
+
+    const target = document.querySelector(targetId);
+
+    if (!target) {
+      return;
+    }
+
+    event.preventDefault();
+
+    target.scrollIntoView({
+      behavior: "smooth",
+      block: "start"
+    });
+
+  });
 
 });
 
 
-// -----------------------------
-// YEAR
-// -----------------------------
+/* --------------------------------
+   HEADER SCROLL EFFECT
+-------------------------------- */
 
-const year =
-  document.getElementById("year");
+const header = document.querySelector(".site-header");
 
-if (year) {
-  year.textContent =
-    new Date().getFullYear();
+window.addEventListener("scroll", () => {
+
+  if (!header) {
+    return;
+  }
+
+  if (window.scrollY > 50) {
+    header.classList.add("scrolled");
+  } else {
+    header.classList.remove("scrolled");
+  }
+
+});
+
+
+/* --------------------------------
+   CURRENT YEAR
+-------------------------------- */
+
+const footerYear = document.querySelector(".footer-year");
+
+if (footerYear) {
+  footerYear.textContent = new Date().getFullYear();
 }
